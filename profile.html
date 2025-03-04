@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f8f9fa;
+            text-align: center;
+            overflow: hidden;
+        }
+        .container {
+            max-width: 400px;
+            margin: 50px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            animation: slideIn 0.8s ease-out;
+        }
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        h2, h3 {
+            color: #007bff;
+            animation: fadeIn 1s ease-in-out;
+        }
+        p {
+            font-size: 18px;
+            margin: 10px 0;
+            animation: fadeIn 1s ease-in-out;
+        }
+        .logout-btn {
+            padding: 10px;
+            width: 100%;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+        }
+        .logout-btn:hover {
+            background: #c82333;
+            transform: scale(1.05);
+        }
+        .orders {
+            text-align: left;
+            margin-top: 20px;
+            background: #eef2f7;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .order {
+            background: white;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        .back-button { position: fixed; bottom: 20px; right: 20px; background: #28a745; color: white; padding: 12px 16px;
+                       border-radius: 50%; font-size: 18px; cursor: pointer; border: none; box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.3);
+                       transition: background 0.3s; }
+        .back-button:hover { background: #218838; }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>User Profile</h2>
+        <div id="profile-container">
+            <p><strong>Name:</strong> <span id="profile-name"></span></p>
+            <p><strong>Email:</strong> <span id="profile-email"></span></p>
+            <p><strong>Phone:</strong> <span id="profile-phone"></span></p>
+            <p><strong>Tracking ID:</strong> <span id="profile-tracking"></span></p>
+        </div>
+
+        <h3>Your Orders</h3>
+        <div class="orders" id="order-list">
+            <p>No orders placed yet.</p>
+        </div>
+
+        <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+
+    <h3>Your Orders</h3>
+<div id="order-container"></div>
+
+
+    <button class="back-button" onclick="goBack()">⬅</button>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let userData = JSON.parse(localStorage.getItem("user"));
+            let orders = JSON.parse(localStorage.getItem("orders")) || [];
+
+            if (userData) {
+                document.getElementById("profile-name").textContent = userData.name;
+                document.getElementById("profile-email").textContent = userData.email;
+                document.getElementById("profile-phone").textContent = userData.phone;
+                document.getElementById("profile-tracking").textContent = userData.trackingID;
+            } else {
+                document.getElementById("profile-container").innerHTML = "<p>No user data found. Please sign up.</p>";
+            }
+
+            let orderList = document.getElementById("order-list");
+            orderList.innerHTML = "";
+            if (orders.length > 0) {
+                orders.forEach(order => {
+                    let orderDiv = document.createElement("div");
+                    orderDiv.classList.add("order");
+                    orderDiv.innerHTML = `
+                        <p><strong>Order ID:</strong> ${order.orderID}</p>
+                        <p><strong>Medicine:</strong> ${order.medicine}</p>
+                        <p><strong>Quantity:</strong> ${order.quantity}</p>
+                        <p><strong>Amount:</strong> ₹${order.total}</p>
+                    `;
+                    orderList.appendChild(orderDiv);
+                });
+            } else {
+                orderList.innerHTML = "<p>No orders placed yet.</p>";
+            }
+        });
+
+        function logout() {
+            localStorage.removeItem("user");
+            window.location.href = "signup.html";
+        }
+        
+        function goBack() {
+            window.history.back();
+        }
+
+document.addEventListener("DOMContentLoaded", function() {
+    fetch("backend/get_orders.php")
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            let ordersHtml = "";
+            data.orders.forEach(order => {
+                ordersHtml += `<p>Order ID: ${order.id}, Medicine: ${order.name}, Quantity: ${order.quantity}, Total: ₹${order.total_price}, Status: ${order.status}</p>`;
+            });
+            document.getElementById("order-container").innerHTML = ordersHtml;
+        } else {
+            document.getElementById("order-container").innerHTML = "<p>No orders found.</p>";
+        }
+    });
+});
+
+
+    </script>
+</body>
+</html>

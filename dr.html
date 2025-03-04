@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <title>droctor ai</title>
+</head>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f4f4f4;
+        margin: 0;
+        padding: 0;
+    }
+    .chat-container {
+        width: 400px;
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        overflow: hidden;
+    }
+    .chat-header {
+        background: #0056b3;
+        color: white;
+        padding: 15px;
+        text-align: center;
+        font-weight: bold;
+    }
+    .chat-body {
+        height: 300px;
+        overflow-y: auto;
+        padding: 10px;
+    }
+    .chat-message {
+        margin: 10px 0;
+        padding: 10px;
+        border-radius: 5px;
+        max-width: 80%;
+    }
+    .user-message {
+        background: #0056b3;
+        color: white;
+        text-align: right;
+        margin-left: auto;
+    }
+    .bot-message {
+        background: #e0e0e0;
+        color: black;
+        text-align: left;
+        margin-right: auto;
+    }
+    .chat-footer {
+        display: flex;
+        padding: 10px;
+        background: #fff;
+        border-top: 1px solid #ccc;
+    }
+    .chat-footer input {
+        flex: 1;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        outline: none;
+    }
+    .chat-footer button {
+        background: #0056b3;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 5px;
+        margin-left: 5px;
+        cursor: pointer;
+    }
+</style>
+</head>
+<body>
+
+<div class="chat-container">
+    <div class="chat-header">🩺 Medical AI Assistant</div>
+    <div class="chat-body" id="chat-body">
+        <div class="bot-message chat-message">Hello! How can I assist you today?</div>
+    </div>
+    <div class="chat-footer">
+        <input type="text" id="user-input" placeholder="Type your question..." />
+        <button onclick="sendMessage()">Send</button>
+    </div>
+</div>
+
+<script>
+    async function sendMessage() {
+        let userInput = document.getElementById("user-input").value;
+        if (!userInput.trim()) return;
+
+        let chatBody = document.getElementById("chat-body");
+
+        // Display User Message
+        let userMessageDiv = document.createElement("div");
+        userMessageDiv.className = "user-message chat-message";
+        userMessageDiv.textContent = userInput;
+        chatBody.appendChild(userMessageDiv);
+        document.getElementById("user-input").value = "";
+
+        // Call AI API
+        let botResponse = await getAIResponse(userInput);
+
+        // Display AI Response
+        let botMessageDiv = document.createElement("div");
+        botMessageDiv.className = "bot-message chat-message";
+        botMessageDiv.textContent = botResponse;
+        chatBody.appendChild(botMessageDiv);
+
+        chatBody.scrollTop = chatBody.scrollHeight;
+    }
+
+    async function getAIResponse(userInput) {
+        try {
+            let response = await fetch("https://api.openai.com/v1/chat/completions", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "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"
+                },
+                body: JSON.stringify({
+                    model: "gpt-3.5-turbo",
+                    messages: [{ role: "system", content: "You are a helpful AI medical assistant." }, 
+                               { role: "user", content: userInput }]
+                })
+            });
+
+            let data = await response.json();
+            return data.choices[0].message.content || "I'm sorry, I don't have an answer for that.";
+        } catch (error) {
+            console.error("Error fetching AI response:", error);
+            return "Sorry, I am unable to process your request right now.";
+        }
+    }
+</script>
+
+</body>
+</html>
+</html>

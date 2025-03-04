@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Nearby Hospitals</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; text-align: center; background: #f8f9fa; }
+        .header { background: #007bff; color: white; padding: 15px; font-size: 24px; font-weight: bold; }
+        .container { padding: 20px; }
+        .btn { display: inline-block; padding: 15px 20px; background: #28a745; color: white; text-decoration: none;
+              font-size: 18px; border-radius: 5px; cursor: pointer; margin-top: 20px; }
+        .btn:hover { background: #218838; }
+        .back-button { position: fixed; bottom: 20px; right: 20px; background: #dc3545; color: white; padding: 10px 15px;
+                       border-radius: 50%; font-size: 18px; cursor: pointer; border: none; }
+        .back-button:hover { background: #c82333; }
+    </style>
+</head>
+<body>
+    <div class="header">🏥 Find Nearby Hospitals</div>
+    <div class="container">
+        <p>Click the button below to allow location access and find nearby hospitals.</p>
+        <button class="btn" onclick="getLocation()">📍 Find Hospitals</button>
+    </div>
+
+    <button class="back-button" onclick="goBack()">⬅</button>
+
+    <script>
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showHospitals, showError);
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        }
+
+        function showHospitals(position) {
+            let latitude = position.coords.latitude;
+            let longitude = position.coords.longitude;
+            window.location.href = `https://www.google.com/maps/search/hospitals/@${latitude},${longitude},14z`;
+        }
+
+        function showError(error) {
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    alert("User denied the request for Geolocation.");
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    alert("Location information is unavailable.");
+                    break;
+                case error.TIMEOUT:
+                    alert("The request to get user location timed out.");
+                    break;
+                case error.UNKNOWN_ERROR:
+                    alert("An unknown error occurred.");
+                    break;
+            }
+        }
+
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+</body>
+</html>

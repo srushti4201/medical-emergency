@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emergency Contact - MedHelp</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f8f9fa;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 500px;
+            margin: 50px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            animation: slideIn 0.8s ease-out;
+        }
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        h2 {
+            color: #dc3545;
+            animation: fadeIn 1s ease-in-out;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin: 10px 0 5px;
+            text-align: left;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        textarea {
+            resize: none;
+            height: 100px;
+        }
+        .submit-btn {
+            width: 100%;
+            padding: 10px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+        }
+        .submit-btn:hover {
+            background: #b71c1c;
+            transform: scale(1.05);
+        }
+        .contact-details {
+            margin-top: 20px;
+            padding: 15px;
+            background: #eef2f7;
+            border-radius: 5px;
+            text-align: left;
+        }
+        .contact-details p {
+            margin: 5px 0;
+        }
+        .emergency-number {
+            font-size: 20px;
+            font-weight: bold;
+            color: #dc3545;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .back-button { position: fixed; bottom: 20px; right: 20px; background: #28a745; color: white; padding: 12px 16px;
+                       border-radius: 50%; font-size: 18px; cursor: pointer; border: none; box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.3);
+                       transition: background 0.3s; }
+        .back-button:hover { background: #218838; }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Emergency Contact</h2>
+
+        <div class="contact-details">
+            <h3>📞 Emergency Helpline</h3>
+            <p class="emergency-number">🚑 Ambulance: <a href="tel:108">108</a></p>
+            <p class="emergency-number">🏥 Hospital Helpline: <a href="tel:+918999838869">+91 8999838869</a></p>
+            <p class="emergency-number">💊 Poison Control: <a href="tel:1800116117">1800-116-117</a></p>
+        </div>
+
+        <h3>Request Emergency Assistance</h3>
+        <form id="contact-form">
+            <label for="name">Your Name</label>
+            <input type="text" id="name" required>
+            
+            <label for="phone">Your Phone</label>
+            <input type="tel" id="phone" required>
+            
+            <label for="location">Your Location</label>
+            <input type="text" id="location" required>
+            
+            <label for="message">Describe the Emergency</label>
+            <textarea id="message" required></textarea>
+            
+            <button type="submit" class="submit-btn">Request Help</button>
+        </form>
+    </div>
+    <button class="back-button" onclick="goBack()">⬅</button>
+    <script>
+        document.getElementById("contact-form").addEventListener("submit", function(event) {
+            event.preventDefault(); // Prevent page reload
+            
+            let name = document.getElementById("name").value;
+            let phone = document.getElementById("phone").value;
+            let location = document.getElementById("location").value;
+            let message = document.getElementById("message").value;
+
+            let emergencyRequests = JSON.parse(localStorage.getItem("emergencyRequests")) || [];
+            emergencyRequests.push({ name, phone, location, message, date: new Date().toLocaleString() });
+            localStorage.setItem("emergencyRequests", JSON.stringify(emergencyRequests));
+
+            alert("Your emergency request has been sent! Help is on the way.");
+            document.getElementById("contact-form").reset();
+        });
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+</body>
+</html>

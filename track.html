@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track Order</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f8f9fa;
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .status {
+            font-size: 18px;
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 5px;
+            background: #007bff;
+            color: white;
+        }
+        .back-button {
+            margin-top: 20px;
+            padding: 10px 15px;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .back-button:hover {
+            background-color: #c82333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Track Your Order</h2>
+        <label for="order-id">Enter Order ID:</label>
+        <input type="text" id="order-id" placeholder="Order ID" required>
+        <button onclick="trackOrder()">Track</button>
+        <div id="order-status" class="status" style="display: none;">Order Status: <span id="status-text"></span></div>
+    </div>
+    <button class="back-button" onclick="goBack()">⬅ Back</button>
+    
+    <script>
+        function trackOrder() {
+            let orderId = document.getElementById('order-id').value;
+            let statusText = document.getElementById('status-text');
+            let orderStatus = document.getElementById('order-status');
+            
+            if (orderId === "") {
+                alert("Please enter an order ID.");
+                return;
+            }
+            
+            let statuses = ["Processing", "Shipped", "Out for Delivery", "Delivered", "Cancelled"];
+            let randomStatus = statuses[Math.floor(Math.random() * statuses.length)];
+            
+            statusText.textContent = randomStatus;
+            orderStatus.style.display = "block";
+        }
+        
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+</body>
+</html>
